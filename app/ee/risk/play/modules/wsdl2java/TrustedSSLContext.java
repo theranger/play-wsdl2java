@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class TrustedSSLContext {
 
-	private static final String CONF_TRUST_STORES = "play.ws.ssl.trustManager.stores";
+	private static final String CONF_TRUST_STORES = "WSDL2Java.trustStores";
 	private static final String CONF_TRUST_STORES_PATH = "path";
 	private static final String CONF_TRUST_STORES_PASSWORD = "password";
 	private static final String DEFAULT_PASSWORD = "changeit";
@@ -49,7 +49,7 @@ public class TrustedSSLContext {
 	@Inject
 	public TrustedSSLContext(Configuration configuration) {
 		List<Configuration> list = configuration.getConfigList(CONF_TRUST_STORES);
-		if (list.isEmpty()) {
+		if (list == null || list.isEmpty()) {
 			Logger.warn("TrustStore configuration list is empty. Using default SSL context.");
 			return;
 		}
@@ -59,11 +59,15 @@ public class TrustedSSLContext {
 
 			List<TrustManager> trustManagers = new ArrayList<>();
 			for (Configuration config : list) {
-				String path = config.getString(CONF_TRUST_STORES_PATH);
-				String password = config.getString(CONF_TRUST_STORES_PASSWORD);
+				String path = config.getString(CONF_TRUST_STORES_PATH, "");
+				String password = config.getString(CONF_TRUST_STORES_PASSWORD, DEFAULT_PASSWORD);
+				if (path.isEmpty()) {
+					Logger.warn("Key store path not configured, skipping loading trust store entry");
+					continue;
+				}
 
 				try {
-					trustManagers.add(createTrustManager(path, password != null ? password : DEFAULT_PASSWORD));
+					trustManagers.add(createTrustManager(path, password));
 				}
 				catch (NoSuchAlgorithmException | KeyStoreException | IOException | CertificateException ex) {
 					Logger.warn("Could not load trust store from file " + path + ", skipping");
