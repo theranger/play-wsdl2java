@@ -1,6 +1,6 @@
 name := "play-wsdl2java"
 organization := "ee.risk.play.modules"
-version := "0.1.1"
+version := "0.2.0"
 scalaVersion := "2.11.8"
 
 licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
