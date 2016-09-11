@@ -75,6 +75,7 @@ public class TrustedSSLContext {
 			}
 			sslContext.init(null, trustManagers.toArray(new TrustManager[trustManagers.size()]), null);
 			HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+			Logger.debug("Enabled custom SSL Context");
 		}
 		catch (NoSuchAlgorithmException | KeyManagementException ex) {
 			Logger.error("Failed initializing trusted SSL context: " + ex.getMessage());

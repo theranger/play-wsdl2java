@@ -43,7 +43,7 @@ public class BasicAuthenticator extends Authenticator {
 			return;
 		}
 
-		Logger.info("Loading custom HTTP Basic authenticator.");
+		Logger.debug("Loading custom HTTP Basic authenticator");
 		Authenticator.setDefault(this);
 	}
 
